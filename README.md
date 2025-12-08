@@ -34,7 +34,7 @@ Each pattern is self-contained and independently configurable, allowing for easy
 1. **Clone and navigate to the project**
    ```bash
    git clone <repository-url>
-   cd langchain
+   cd agentic-ai-patterns
    ```
 
 2. **Configure your API key**
@@ -79,29 +79,6 @@ src/main/java/com/agent/langchain/
 ├── config/                # Configuration
 └── exception/             # Error handling
 ```
-
-## � Key Features
-
-- **Multiple Agentic Patterns** - Explore different agent orchestration strategies
-- **Production-Ready** - Comprehensive validation, error handling, and logging
-- **Extensible Design** - Easy to add new patterns and agents
-- **Clean API** - RESTful endpoints with clear documentation
-- **Secure Configuration** - Environment-based API key management
-
-## 🧪 Testing
-
-```bash
-# Run tests
-mvn test
-
-# Build and verify
-mvn clean verify
-```
-
-## � Documentation
-
-- `API-TESTING.md` - API endpoint examples and testing guide
-- `application.properties` - Configuration reference
 
 ## 🎓 Learning Outcomes
 
