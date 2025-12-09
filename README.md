@@ -9,6 +9,7 @@ This project implements multiple agentic AI patterns, each demonstrating differe
 **Current Patterns:**
 - **Conditional Routing** - Intelligent query classification and expert delegation
 - **Sequential Flow** - Multi-stage pipeline processing with cumulative enhancement
+- **Loop Pattern** - Iterative refinement through quality scoring and feedback
 
 **Coming Soon:** Parallel execution, hierarchical routing, tool-using agents, and more.
 
@@ -72,7 +73,8 @@ The API will be available at `http://localhost:8080`
 src/main/java/com/agent/langchain/
 ├── patterns/              # Pattern implementations
 │   ├── ConditionalRoutingPattern.java
-│   └── SequentialFlowPattern.java
+│   ├── SequentialFlowPattern.java
+│   └── LoopPattern.java
 ├── controller/            # REST endpoints
 ├── services/              # Business logic
 ├── dto/                   # Data transfer objects

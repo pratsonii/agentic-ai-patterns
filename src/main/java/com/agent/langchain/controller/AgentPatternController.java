@@ -1,5 +1,7 @@
 package com.agent.langchain.controller;
 
+import com.agent.langchain.dto.ContentRefinementRequest;
+import com.agent.langchain.dto.ContentRefinementResponse;
 import com.agent.langchain.dto.ExpertQueryRequest;
 import com.agent.langchain.dto.ExpertQueryResponse;
 import com.agent.langchain.dto.RecipeRequest;
@@ -152,5 +154,53 @@ public class AgentPatternController {
     public ResponseEntity<String> sequentialFlowHealth() {
         logger.debug("Sequential flow health check requested");
         return ResponseEntity.ok("Sequential Flow Pattern is operational");
+    }
+
+    /**
+     * Loop Pattern Endpoint.
+     * 
+     * Refines content through an iterative loop of quality scoring and editing.
+     * The system performs the following steps:
+     * 1. ContentCreator generates initial content based on topic and style
+     * 2. QualityScorer evaluates content quality (0.0 to 1.0 scale)
+     * 3. ContentEditor improves content based on quality score
+     * 4. Steps 2-3 repeat until quality score >= 0.8 or max 5 iterations reached
+     * 
+     * This pattern demonstrates feedback-driven iterative improvement, ideal for
+     * scenarios requiring automated quality assurance and refinement.
+     *
+     * @param request the content refinement request containing topic and style
+     * @return refined content that meets quality standards
+     * 
+     * @throws IllegalArgumentException if any request field is null, empty, or
+     *                                  exceeds length limits
+     * @throws RuntimeException         if content refinement fails
+     */
+    @PostMapping("/loop/refine-content")
+    public ResponseEntity<ContentRefinementResponse> loopPattern(@Valid @RequestBody ContentRefinementRequest request) {
+        logger.info("Received loop pattern request for topic: {}, style: {}",
+                request.getTopic(), request.getStyle());
+
+        String content = agentPatternService.executeLoopPattern(
+                request.getTopic(),
+                request.getStyle());
+        ContentRefinementResponse response = new ContentRefinementResponse(content);
+
+        logger.debug("Returning refined content to client");
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Health check endpoint for the loop pattern.
+     * 
+     * Verifies that the loop pattern system is operational and all
+     * content refinement agents are available.
+     *
+     * @return status message indicating system health
+     */
+    @GetMapping("/loop/health")
+    public ResponseEntity<String> loopPatternHealth() {
+        logger.debug("Loop pattern health check requested");
+        return ResponseEntity.ok("Loop Pattern is operational");
     }
 }

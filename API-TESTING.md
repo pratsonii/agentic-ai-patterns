@@ -85,3 +85,50 @@ curl -X POST http://localhost:8080/api/v1/patterns/sequential-flow/develop-recip
   -H "Content-Type: application/json" \
   -d '{"cuisine":"Mediterranean","dietary":"paleo","mealType":"breakfast"}'
 ```
+
+---
+
+## Loop Pattern
+
+Iteratively refines content through quality scoring and editing until it meets quality standards (score >= 0.8) or reaches max iterations (5).
+
+**Endpoint**: `POST /api/v1/patterns/loop/refine-content`
+
+### Examples
+
+```bash
+# Professional Technical Article
+curl -X POST http://localhost:8080/api/v1/patterns/loop/refine-content \
+  -H "Content-Type: application/json" \
+  -d '{"topic":"artificial intelligence in healthcare","style":"professional"}'
+
+# Casual Blog Post
+curl -X POST http://localhost:8080/api/v1/patterns/loop/refine-content \
+  -H "Content-Type: application/json" \
+  -d '{"topic":"sustainable living tips","style":"casual"}'
+
+# Technical Documentation
+curl -X POST http://localhost:8080/api/v1/patterns/loop/refine-content \
+  -H "Content-Type: application/json" \
+  -d '{"topic":"microservices architecture patterns","style":"technical"}'
+
+# Creative Storytelling
+curl -X POST http://localhost:8080/api/v1/patterns/loop/refine-content \
+  -H "Content-Type: application/json" \
+  -d '{"topic":"time travel paradoxes","style":"creative"}'
+
+# Academic Writing
+curl -X POST http://localhost:8080/api/v1/patterns/loop/refine-content \
+  -H "Content-Type: application/json" \
+  -d '{"topic":"climate change mitigation strategies","style":"academic"}'
+
+# Marketing Copy
+curl -X POST http://localhost:8080/api/v1/patterns/loop/refine-content \
+  -H "Content-Type: application/json" \
+  -d '{"topic":"eco-friendly products","style":"persuasive"}'
+
+# Educational Content
+curl -X POST http://localhost:8080/api/v1/patterns/loop/refine-content \
+  -H "Content-Type: application/json" \
+  -d '{"topic":"quantum computing basics","style":"educational"}'
+```

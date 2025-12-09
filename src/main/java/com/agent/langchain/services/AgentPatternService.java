@@ -1,6 +1,7 @@
 package com.agent.langchain.services;
 
 import com.agent.langchain.patterns.ConditionalRoutingPattern.ExpertRouterAgent;
+import com.agent.langchain.patterns.LoopPattern.ContentRefiner;
 import com.agent.langchain.patterns.SequentialFlowPattern.RecipeDeveloper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,9 @@ import org.springframework.stereotype.Service;
  * Currently Supported Patterns:
  * - Conditional Routing: Routes queries to specialized expert agents based on
  * classification
+ * - Sequential Flow: Processes requests through a pipeline of agents
+ * - Loop Pattern: Iteratively refines content through quality scoring and
+ * editing
  * 
  * Future patterns can be added as additional methods in this service.
  */
@@ -26,10 +30,13 @@ public class AgentPatternService {
 
     private final ExpertRouterAgent expertRouterAgent;
     private final RecipeDeveloper recipeDeveloper;
+    private final ContentRefiner contentRefiner;
 
-    public AgentPatternService(ExpertRouterAgent expertRouterAgent, RecipeDeveloper recipeDeveloper) {
+    public AgentPatternService(ExpertRouterAgent expertRouterAgent, RecipeDeveloper recipeDeveloper,
+            ContentRefiner contentRefiner) {
         this.expertRouterAgent = expertRouterAgent;
         this.recipeDeveloper = recipeDeveloper;
+        this.contentRefiner = contentRefiner;
     }
 
     /**
@@ -116,6 +123,48 @@ public class AgentPatternService {
         } catch (Exception e) {
             logger.error("Error executing sequential flow: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to execute sequential flow: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Executes the Loop Pattern.
+     * 
+     * Iteratively refines content through a quality scoring and editing loop.
+     * 
+     * The loop flow:
+     * 1. ContentCreator generates initial content based on topic and style
+     * 2. QualityScorer evaluates content quality (0.0 to 1.0 scale)
+     * 3. ContentEditor improves content based on score
+     * 4. Steps 2-3 repeat until score >= 0.8 or max 5 iterations reached
+     * 
+     * This pattern demonstrates feedback-driven iterative improvement.
+     *
+     * @param topic the topic to write about
+     * @param style the writing style (e.g., "professional", "casual", "technical",
+     *              "creative")
+     * @return refined content that meets quality standards
+     * @throws IllegalArgumentException if any parameter is null or empty
+     * @throws RuntimeException         if content refinement fails
+     */
+    public String executeLoopPattern(String topic, String style) {
+        if (topic == null || topic.trim().isEmpty()) {
+            logger.warn("Received null or empty topic for loop pattern");
+            throw new IllegalArgumentException("Topic cannot be null or empty");
+        }
+        if (style == null || style.trim().isEmpty()) {
+            logger.warn("Received null or empty style for loop pattern");
+            throw new IllegalArgumentException("Style cannot be null or empty");
+        }
+
+        logger.info("Executing loop pattern for topic: {}, style: {}", topic, style);
+
+        try {
+            String result = contentRefiner.refineContent(topic, style);
+            logger.info("Successfully executed loop pattern and generated refined content");
+            return result;
+        } catch (Exception e) {
+            logger.error("Error executing loop pattern: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to execute loop pattern: " + e.getMessage(), e);
         }
     }
 
