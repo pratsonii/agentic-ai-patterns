@@ -88,6 +88,53 @@ curl -X POST http://localhost:8080/api/v1/patterns/sequential-flow/develop-recip
 
 ---
 
+## Parallel Flow Pattern
+
+Builds comprehensive startup pitches by executing multiple agents in parallel: Executive Summary → Market Analysis → Risk Assessment.
+
+**Endpoint**: `POST /api/v1/patterns/parallel-flow/build-pitch`
+
+### Examples
+
+```bash
+# Tech SaaS Startup
+curl -X POST http://localhost:8080/api/v1/patterns/parallel-flow/build-pitch \
+  -H "Content-Type: application/json" \
+  -d '{"startupName":"CloudSync AI","idea":"AI-powered cloud data synchronization and backup platform with real-time collaboration features","targetMarket":"Enterprise IT departments and remote teams"}'
+
+# HealthTech Startup
+curl -X POST http://localhost:8080/api/v1/patterns/parallel-flow/build-pitch \
+  -H "Content-Type: application/json" \
+  -d '{"startupName":"WellnessFlow","idea":"Mobile app for personalized mental health and stress management using AI and behavioral science","targetMarket":"Millennials and Gen Z health-conscious consumers"}'
+
+# FinTech Startup
+curl -X POST http://localhost:8080/api/v1/patterns/parallel-flow/build-pitch \
+  -H "Content-Type: application/json" \
+  -d '{"startupName":"MoneyMind","idea":"Intelligent personal finance platform for cryptocurrency management and investment portfolio optimization","targetMarket":"Crypto investors and young professionals"}'
+
+# EdTech Startup
+curl -X POST http://localhost:8080/api/v1/patterns/parallel-flow/build-pitch \
+  -H "Content-Type: application/json" \
+  -d '{"startupName":"SkillBridge","idea":"Platform connecting students with mentors for skill development through AI-matched pair learning","targetMarket":"College students and career changers"}'
+
+# E-commerce Startup
+curl -X POST http://localhost:8080/api/v1/patterns/parallel-flow/build-pitch \
+  -H "Content-Type: application/json" \
+  -d '{"startupName":"VintageHub","idea":"Curated online marketplace for sustainable vintage and second-hand fashion with AR try-on","targetMarket":"Eco-conscious fashion enthusiasts aged 18-35"}'
+
+# IoT Startup
+curl -X POST http://localhost:8080/api/v1/patterns/parallel-flow/build-pitch \
+  -H "Content-Type: application/json" \
+  -d '{"startupName":"SmartHome Plus","idea":"Integrated IoT ecosystem for smart home automation with voice control and energy optimization","targetMarket":"Homeowners and smart building facility managers"}'
+
+# Green Energy Startup
+curl -X POST http://localhost:8080/api/v1/patterns/parallel-flow/build-pitch \
+  -H "Content-Type: application/json" \
+  -d '{"startupName":"SolarIQ","idea":"AI-powered solar panel monitoring and maintenance platform for residential and commercial installations","targetMarket":"Solar companies, installers, and homeowners"}'
+```
+
+---
+
 ## Loop Pattern
 
 Iteratively refines content through quality scoring and editing until it meets quality standards (score >= 0.8) or reaches max iterations (5).

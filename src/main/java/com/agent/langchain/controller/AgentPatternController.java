@@ -4,6 +4,8 @@ import com.agent.langchain.dto.ContentRefinementRequest;
 import com.agent.langchain.dto.ContentRefinementResponse;
 import com.agent.langchain.dto.ExpertQueryRequest;
 import com.agent.langchain.dto.ExpertQueryResponse;
+import com.agent.langchain.dto.ParallelFlowRequest;
+import com.agent.langchain.dto.ParallelFlowResponse;
 import com.agent.langchain.dto.RecipeRequest;
 import com.agent.langchain.dto.RecipeResponse;
 import com.agent.langchain.services.AgentPatternService;
@@ -26,6 +28,8 @@ import org.springframework.web.bind.annotation.*;
  * automatic classification
  * - Sequential Flow: Processes requests through a pipeline of agents where each
  * agent builds upon the previous agent's output
+ * - Loop Pattern: Iteratively refines content through quality scoring and editing
+ * - Parallel Flow: Executes multiple independent agents concurrently
  * 
  * Future patterns can be added as additional endpoints in this controller.
  */
@@ -202,5 +206,56 @@ public class AgentPatternController {
     public ResponseEntity<String> loopPatternHealth() {
         logger.debug("Loop pattern health check requested");
         return ResponseEntity.ok("Loop Pattern is operational");
+    }
+
+    /**
+     * Parallel Flow Pattern Endpoint.
+     * 
+     * Builds a comprehensive startup pitch by executing multiple agents in
+     * parallel.
+     * The system performs the following steps in parallel:
+     * 1. ExecutiveSummaryGenerator creates a concise pitch overview
+     * 2. MarketAnalyzer evaluates market opportunity and trends
+     * 3. RiskAssessor identifies risks and proposes mitigation strategies
+     * 
+     * All agents execute concurrently using a thread pool, improving performance
+     * compared to sequential execution. Results from all agents are combined into
+     * a comprehensive pitch document.
+     *
+     * @param request the parallel flow request containing startup details
+     * @return comprehensive startup pitch document
+     * 
+     * @throws IllegalArgumentException if any request field is null, empty, or
+     *                                  exceeds length limits
+     * @throws RuntimeException         if pitch generation fails
+     */
+    @PostMapping("/parallel-flow/build-pitch")
+    public ResponseEntity<ParallelFlowResponse> parallelFlow(@Valid @RequestBody ParallelFlowRequest request) {
+        logger.info("Received parallel flow request for startup: {}, idea: {}, market: {}",
+                request.getStartupName(), request.getIdea().substring(0, Math.min(request.getIdea().length(), 30)),
+                request.getTargetMarket());
+
+        String pitch = agentPatternService.executeParallelFlow(
+                request.getStartupName(),
+                request.getIdea(),
+                request.getTargetMarket());
+        ParallelFlowResponse response = new ParallelFlowResponse(pitch);
+
+        logger.debug("Returning startup pitch document to client");
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Health check endpoint for the parallel flow pattern.
+     * 
+     * Verifies that the parallel flow system is operational and all
+     * pitch generation agents are available.
+     *
+     * @return status message indicating system health
+     */
+    @GetMapping("/parallel-flow/health")
+    public ResponseEntity<String> parallelFlowHealth() {
+        logger.debug("Parallel flow health check requested");
+        return ResponseEntity.ok("Parallel Flow Pattern is operational");
     }
 }

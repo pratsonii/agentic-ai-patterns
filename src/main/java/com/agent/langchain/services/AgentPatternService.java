@@ -2,6 +2,7 @@ package com.agent.langchain.services;
 
 import com.agent.langchain.patterns.ConditionalRoutingPattern.ExpertRouterAgent;
 import com.agent.langchain.patterns.LoopPattern.ContentRefiner;
+import com.agent.langchain.patterns.ParallelFlowPattern.StartupPitcher;
 import com.agent.langchain.patterns.SequentialFlowPattern.RecipeDeveloper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
  * - Sequential Flow: Processes requests through a pipeline of agents
  * - Loop Pattern: Iteratively refines content through quality scoring and
  * editing
+ * - Parallel Flow: Executes multiple independent agents concurrently
  * 
  * Future patterns can be added as additional methods in this service.
  */
@@ -31,12 +33,14 @@ public class AgentPatternService {
     private final ExpertRouterAgent expertRouterAgent;
     private final RecipeDeveloper recipeDeveloper;
     private final ContentRefiner contentRefiner;
+    private final StartupPitcher startupPitcher;
 
     public AgentPatternService(ExpertRouterAgent expertRouterAgent, RecipeDeveloper recipeDeveloper,
-            ContentRefiner contentRefiner) {
+            ContentRefiner contentRefiner, StartupPitcher startupPitcher) {
         this.expertRouterAgent = expertRouterAgent;
         this.recipeDeveloper = recipeDeveloper;
         this.contentRefiner = contentRefiner;
+        this.startupPitcher = startupPitcher;
     }
 
     /**
@@ -169,14 +173,57 @@ public class AgentPatternService {
     }
 
     /**
+     * Executes the Parallel Flow pattern.
+     * 
+     * Builds a comprehensive startup pitch by executing three agents in parallel:
+     * - Executive Summary Generator
+     * - Market Analyzer
+     * - Risk Assessor
+     * 
+     * All agents run concurrently, improving performance compared to sequential
+     * execution.
+     *
+     * @param startupName  the name of the startup
+     * @param idea         the startup's product/service idea
+     * @param targetMarket the target market/audience
+     * @return comprehensive startup pitch document
+     * @throws IllegalArgumentException if any parameter is null or empty
+     * @throws RuntimeException         if pitch generation fails
+     */
+    public String executeParallelFlow(String startupName, String idea, String targetMarket) {
+        if (startupName == null || startupName.trim().isEmpty()) {
+            logger.warn("Received null or empty startup name for parallel flow");
+            throw new IllegalArgumentException("Startup name cannot be null or empty");
+        }
+        if (idea == null || idea.trim().isEmpty()) {
+            logger.warn("Received null or empty idea for parallel flow");
+            throw new IllegalArgumentException("Idea cannot be null or empty");
+        }
+        if (targetMarket == null || targetMarket.trim().isEmpty()) {
+            logger.warn("Received null or empty target market for parallel flow");
+            throw new IllegalArgumentException("Target market cannot be null or empty");
+        }
+
+        logger.info("Executing parallel flow pattern for startup: {}, idea: {}, market: {}",
+                startupName, idea.substring(0, Math.min(idea.length(), 30)), targetMarket);
+
+        try {
+            String result = startupPitcher.buildPitch(startupName, idea, targetMarket);
+            logger.info("Successfully executed parallel flow and generated startup pitch");
+            return result;
+        } catch (Exception e) {
+            logger.error("Error executing parallel flow: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to execute parallel flow: " + e.getMessage(), e);
+        }
+    }
+
+    /**
      * Placeholder for future pattern implementations.
      * 
      * Example patterns that could be added:
-     * - Parallel Execution: Run multiple agents concurrently
      * - Hierarchical Routing: Multi-level routing with sub-experts
      * - Tool-using Agents: Agents that can use external tools
      * - Memory-enhanced Agents: Agents with conversation history
      */
-    // public String executeParallelPattern(String query) { ... }
     // public String executeHierarchicalRouting(String query) { ... }
 }
