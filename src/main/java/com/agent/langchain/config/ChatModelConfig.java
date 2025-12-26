@@ -16,7 +16,7 @@ public class ChatModelConfig {
     @Value("${google.ai.api-key}")
     private String apiKey;
 
-    @Value("${google.ai.model-name:gemini-2.5-flash-lite}")
+    @Value("${google.ai.model-name:gemini-1.5-flash}")
     private String modelName;
 
     @Bean("geminiChatModel")
